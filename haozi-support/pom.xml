@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.haozi</groupId>
+        <artifactId>haozi-cloud</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>haozi-support</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>haozi-common</module>
+        <module>haozi-data</module>
+        <module>haozi-generator</module>
+        <module>haozi-security</module>
+    </modules>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <hutool.version>5.8.0.M3</hutool.version>
+        <mapstruct.version>1.5.3.Final</mapstruct.version>
+        <com.ejlchina.version>3.8.2</com.ejlchina.version>
+        <mybatis-plus-generator.version>3.5.3.1</mybatis-plus-generator.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>${mapstruct.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ejlchina</groupId>
+                <artifactId>bean-searcher-boot-starter</artifactId>
+                <version>${com.ejlchina.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-generator -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-generator</artifactId>
+                <version>${mybatis-plus-generator.version}</version>
+            </dependency>
+
+        </dependencies>
+
+
+    </dependencyManagement>
+
+</project>

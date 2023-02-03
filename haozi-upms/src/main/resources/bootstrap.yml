@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: haozi-upms
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_URL:localhost:8848}
+      config:
+        server-addr: ${NACOS_URL:localhost:8848}
+        file-extension: yaml
+        group: DEFAULT_GROUP
+        import: optional:nacos
