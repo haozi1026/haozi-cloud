@@ -12,6 +12,7 @@
         <module>haozi-support</module>
         <module>haozi-authorization</module>
         <module>haozi-upms</module>
+        <module>haozi-support/haozi-remote</module>
 
     </modules>
     <properties>

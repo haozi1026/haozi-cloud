@@ -24,7 +24,7 @@ public interface AuthProvider {
      * @param request
      * @return
      */
-    Authentication convert(HttpServletRequest request, MultiValueMap<String, String> parameters);
+    HaoZiToken convert(HttpServletRequest request, MultiValueMap<String, String> parameters);
 
     /**
      * 认证

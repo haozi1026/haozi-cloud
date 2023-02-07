@@ -21,7 +21,7 @@ public class UsernamePasswordToken extends HaoZiToken {
     private String password;
 
     public UsernamePasswordToken(String username, String password) {
-        super(Collections.emptyList());
+        super("");
 
     }
 
