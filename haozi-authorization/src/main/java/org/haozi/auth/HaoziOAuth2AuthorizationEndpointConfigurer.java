@@ -103,13 +103,14 @@ public class HaoziOAuth2AuthorizationEndpointConfigurer {
             if (authProvider == null) {
                 throw new AppFramworkException("未获取到认证处理器");
             }
+            Authentication auth= null;
             try {
-                authProvider.auth((HaoZiToken) authentication);
+                 auth = authProvider.auth((HaoZiToken) authentication);
 
             } catch (AuthException exception) {
-                throwError(OAuth2ErrorCodes.INVALID_REQUEST, OAuth2ParameterNames.CLIENT_ID, DEFAULT_ERROR_URI);
+                throwError(OAuth2ErrorCodes.INVALID_REQUEST,exception.getMessage(), DEFAULT_ERROR_URI);
             }
-            return null;
+            return auth;
         }
 
         @Override

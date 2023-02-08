@@ -1,5 +1,6 @@
 package org.haozi.auth.endpoint.provider;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -61,8 +62,8 @@ public class PassworderProvider implements AuthProvider {
         if (token instanceof UsernamePasswordToken == false) {
             throw new AppFramworkException("密码模式校验异常，传入token类型错误");
         }
-        String principal = StrUtil.toString(token.getPrincipal());
-        String credentials = StrUtil.toString(token.getCredentials());
+        String principal = Convert.toStr(token.getPrincipal());
+        String credentials = Convert.toStr(token.getCredentials());
 
         if (StrUtil.isBlank(principal) || StrUtil.isBlank(credentials)) {
             throw new AppFramworkException("密码模式校验异常，传入token错误，用户名或密码为空");

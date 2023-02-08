@@ -22,7 +22,8 @@ public class UsernamePasswordToken extends HaoZiToken {
 
     public UsernamePasswordToken(String username, String password) {
         super("");
-
+        this.userName = username;
+        this.password = password;
     }
 
     @Override

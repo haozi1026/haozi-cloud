@@ -25,6 +25,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
@@ -76,13 +79,13 @@ public class SecurityConfig {
             endpoint.
                     //自定义认证转换器
                     authorizationRequestConverter(authenticationConverter)
-                    //自定义认证器
-                    .authenticationProvider(authenticationProvider)
+//                    //自定义认证器
+//                    .authenticationProvider(authenticationProvider)
                     //自定义错误处理器
                     .errorResponseHandler(authenticationFailureHandler());
         });
         http.apply(authorizationServerConfigurer);
-
+        http.authenticationProvider(authenticationProvider);
 
         return http.build();
     }
@@ -151,6 +154,10 @@ public class SecurityConfig {
     @Bean
     public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
         return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
+    }
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
     private AuthenticationFailureHandler authenticationFailureHandler(){
