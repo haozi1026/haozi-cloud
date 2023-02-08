@@ -17,6 +17,7 @@ import org.haozi.util.ResponseBuilder;
 import org.haozi.util.ResponseWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,8 +31,11 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.oauth2.core.OAuth2Token;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
@@ -39,6 +43,9 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
+import org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat;
+import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
+import org.springframework.security.oauth2.server.authorization.token.*;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
@@ -63,7 +70,9 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 public class SecurityConfig {
 
+
     @Bean
+    @Order(1)
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
         OAuth2AuthorizationServerConfigurer authorizationServerConfigurer =
                 new OAuth2AuthorizationServerConfigurer();
@@ -71,21 +80,26 @@ public class SecurityConfig {
         HaoziOAuth2AuthorizationEndpointConfigurer.HaoZiAuthenticationConverter
             authenticationConverter = new HaoziOAuth2AuthorizationEndpointConfigurer.HaoZiAuthenticationConverter();
 
+
+
         HaoziOAuth2AuthorizationEndpointConfigurer.HaoZiAuthenticationProvider
                 authenticationProvider = new HaoziOAuth2AuthorizationEndpointConfigurer.HaoZiAuthenticationProvider();
 
 
-        authorizationServerConfigurer.authorizationEndpoint(endpoint->{
+        authorizationServerConfigurer.tokenEndpoint(endpoint->{
             endpoint.
                     //自定义认证转换器
-                    authorizationRequestConverter(authenticationConverter)
-//                    //自定义认证器
-//                    .authenticationProvider(authenticationProvider)
+                    accessTokenRequestConverter(authenticationConverter)
                     //自定义错误处理器
                     .errorResponseHandler(authenticationFailureHandler());
         });
-        http.apply(authorizationServerConfigurer);
-        http.authenticationProvider(authenticationProvider);
+
+        http
+                .apply(authorizationServerConfigurer)
+                .and()
+                .authenticationProvider(authenticationProvider)
+                .csrf(csrf->csrf.disable())
+                .authorizeHttpRequests(request->request.requestMatchers("/oauth2/token").anonymous());
 
         return http.build();
     }
@@ -152,12 +166,18 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
-        return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
-    }
-    @Bean
     public PasswordEncoder passwordEncoder(){
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
+    @Bean
+    public OAuth2TokenGenerator oAuth2TokenGenerator(){
+        JwtEncoder jwtEncoder = new NimbusJwtEncoder(jwkSource());
+        JwtGenerator
+                jwtGenerator = new JwtGenerator(jwtEncoder);
+        OAuth2AccessTokenGenerator accessTokenGenerator = new OAuth2AccessTokenGenerator();
+        OAuth2RefreshTokenGenerator refreshTokenGenerator = new OAuth2RefreshTokenGenerator();
+
+        return new DelegatingOAuth2TokenGenerator(jwtGenerator,accessTokenGenerator, refreshTokenGenerator);
     }
 
     private AuthenticationFailureHandler authenticationFailureHandler(){

@@ -52,8 +52,7 @@ public class PassworderProvider implements AuthProvider {
         if (StrUtil.isBlank(password)) {
             throw new AuthException("password为空");
         }
-
-        return new UsernamePasswordToken(userName, password);
+        return new UsernamePasswordToken(userName, password,PASSWORD);
     }
 
     @Override

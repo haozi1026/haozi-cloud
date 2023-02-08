@@ -2,8 +2,10 @@ spring:
   cloud:
     nacos:
       config:
-        server-addr: 127.0.0.1:9848
+        server-addr: ${NACOS_URL:127.0.0.1:9848}
         file-extension: yaml
+      discovery:
+        server-addr: ${NACOS_URL:127.0.0.1:9848}
 
   application:
     name: haozi-auth

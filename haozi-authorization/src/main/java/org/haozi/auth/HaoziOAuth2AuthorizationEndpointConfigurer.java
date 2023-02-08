@@ -9,17 +9,32 @@ import org.haozi.auth.token.HaoZiToken;
 import org.haozi.exception.AppFramworkException;
 import org.haozi.exception.AuthException;
 import org.haozi.util.HaoZiOAuth2EndpointUtils;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.oauth2.core.OAuth2Error;
-import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
+import org.springframework.security.oauth2.core.*;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
+
+import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
+import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AccessTokenAuthenticationToken;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationCodeRequestAuthenticationException;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
+import org.springframework.security.oauth2.server.authorization.context.AuthorizationServerContextHolder;
+import org.springframework.security.oauth2.server.authorization.token.DefaultOAuth2TokenContext;
+import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenContext;
+import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
 import org.springframework.security.web.authentication.AuthenticationConverter;
+import org.springframework.security.web.util.matcher.AndRequestMatcher;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 
+import java.security.Principal;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
@@ -32,15 +47,19 @@ import java.util.concurrent.atomic.AtomicReference;
 @Slf4j
 public class HaoziOAuth2AuthorizationEndpointConfigurer {
 
-
     /**
      * 自定义 转换器
      */
     public static class HaoZiAuthenticationConverter implements AuthenticationConverter {
         private String GRAN_TYPE = "grant_type";
+        private final RequestMatcher tokenEndpointMatcher = new AntPathRequestMatcher("/oauth2/token", HttpMethod.POST.name());
 
         @Override
         public Authentication convert(HttpServletRequest request) {
+
+            if (!tokenEndpointMatcher.matches(request)) {
+                return null;
+            }
 
             MultiValueMap<String, String> parameters = HaoZiOAuth2EndpointUtils.getParameters(request);
 
@@ -52,7 +71,7 @@ public class HaoziOAuth2AuthorizationEndpointConfigurer {
             }
             log.trace("自定义处理器匹配，认证类型{},处理器{}", granType, authProviders);
 
-            AtomicReference<Authentication> authentication = new AtomicReference<>();
+            AtomicReference<HaoZiToken> authentication = new AtomicReference<>();
             authProviders.forEach((class0, provider) -> {
 
                 if (provider.isSupport(granType)) {
@@ -63,9 +82,16 @@ public class HaoziOAuth2AuthorizationEndpointConfigurer {
                             parameters.get(OAuth2ParameterNames.CLIENT_ID).size() != 1) {
                         throwError(OAuth2ErrorCodes.INVALID_REQUEST, OAuth2ParameterNames.CLIENT_ID, DEFAULT_ERROR_URI);
                     }
+                    RegisteredClientRepository registeredClientRepository = SpringUtil.getBean(RegisteredClientRepository.class);
+                    RegisteredClient registeredClient = registeredClientRepository.findByClientId(clientId);
+                    if (registeredClient == null) {
+                        throwError(OAuth2ErrorCodes.INVALID_REQUEST, OAuth2ParameterNames.CLIENT_ID, DEFAULT_ERROR_URI);
+
+                    }
                     HaoZiToken authenticationConvert = null;
                     try {
                         authenticationConvert = provider.convert(request, parameters);
+                        authenticationConvert.setRegisteredClient(registeredClient);
 
                     } catch (AuthException exception) {
                         throwError(OAuth2ErrorCodes.INVALID_REQUEST, exception.getMessage(), DEFAULT_ERROR_URI);
@@ -94,23 +120,52 @@ public class HaoziOAuth2AuthorizationEndpointConfigurer {
      * 自定义认证
      */
     public static class HaoZiAuthenticationProvider implements AuthenticationProvider {
+       private  OAuth2AuthorizationService oAuth2AuthorizationService;
 
+//       private  OAuth2TokenGenerator oAuth2TokenGenerator;
+//        public HaoZiAuthenticationProvider(OAuth2AuthorizationService oAuth2AuthorizationService,OAuth2TokenGenerator tokenGenerator){
+//            this.oAuth2AuthorizationService = oAuth2AuthorizationService;
+//            this.oAuth2TokenGenerator = tokenGenerator;
+//        }
         @Override
         public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
             AuthProvider authProvider = authProviderCache.get(authentication.getClass());
-
+            HaoZiToken haoZiToken = (HaoZiToken) authentication;
             if (authProvider == null) {
                 throw new AppFramworkException("未获取到认证处理器");
             }
-            Authentication auth= null;
+            Authentication auth = null;
             try {
-                 auth = authProvider.auth((HaoZiToken) authentication);
-
+                auth = authProvider.auth(haoZiToken);
             } catch (AuthException exception) {
-                throwError(OAuth2ErrorCodes.INVALID_REQUEST,exception.getMessage(), DEFAULT_ERROR_URI);
+                throwError(OAuth2ErrorCodes.INVALID_REQUEST, exception.getMessage(), DEFAULT_ERROR_URI);
             }
-            return auth;
+
+            RegisteredClient registeredClient = haoZiToken.getRegisteredClient();
+            DefaultOAuth2TokenContext.Builder tokenContextBuilder = DefaultOAuth2TokenContext.builder()
+                    .registeredClient(registeredClient)
+                    .principal(authentication)
+                    .authorizationServerContext(AuthorizationServerContextHolder.getContext());
+
+
+            OAuth2TokenContext tokenContext = tokenContextBuilder.tokenType(OAuth2TokenType.ACCESS_TOKEN).build();
+            OAuth2Token generatedAccessToken = SpringUtil.getBean(OAuth2TokenGenerator.class).generate(tokenContext);
+            if (generatedAccessToken == null) {
+                OAuth2Error error = new OAuth2Error(OAuth2ErrorCodes.SERVER_ERROR,
+                        "The token generator failed to generate the access token.", "");
+                throw new OAuth2AuthenticationException(error);
+            }
+
+            OAuth2AccessToken accessToken = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER,
+                    generatedAccessToken.getTokenValue(), generatedAccessToken.getIssuedAt(),
+                    generatedAccessToken.getExpiresAt(), tokenContext.getAuthorizedScopes());
+
+            Map<String, Object> additionalParameters = Collections.emptyMap();
+
+
+            return new OAuth2AccessTokenAuthenticationToken(
+                    registeredClient, authentication, accessToken, null, additionalParameters);
         }
 
         @Override

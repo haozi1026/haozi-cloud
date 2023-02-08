@@ -21,7 +21,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.boot.version>3.0.2</spring.boot.version>
         <spring.cloud.version>2022.0.1</spring.cloud.version>
-        <alibaba.nacos.version>2021.0.4.0</alibaba.nacos.version>
+        <alibaba.nacos.version>2022.0.0.0-RC1</alibaba.nacos.version>
         <spring.clud.starter.bootstrap.version>3.1.1</spring.clud.starter.bootstrap.version>
     </properties>
 

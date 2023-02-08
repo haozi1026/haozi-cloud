@@ -20,8 +20,8 @@ public class UsernamePasswordToken extends HaoZiToken {
      */
     private String password;
 
-    public UsernamePasswordToken(String username, String password) {
-        super("");
+    public UsernamePasswordToken(String username, String password,String grantType) {
+        super(grantType);
         this.userName = username;
         this.password = password;
     }
