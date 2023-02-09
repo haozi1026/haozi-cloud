@@ -13,6 +13,7 @@
         <module>haozi-authorization</module>
         <module>haozi-upms</module>
         <module>haozi-support/haozi-remote</module>
+        <module>haozi-support/haozi-exceptionHandler</module>
 
     </modules>
     <properties>
@@ -23,6 +24,7 @@
         <spring.cloud.version>2022.0.1</spring.cloud.version>
         <alibaba.nacos.version>2022.0.0.0-RC1</alibaba.nacos.version>
         <spring.clud.starter.bootstrap.version>3.1.1</spring.clud.starter.bootstrap.version>
+        <mapstruct.version>1.5.3.Final</mapstruct.version>
     </properties>
 
     <dependencyManagement>
@@ -57,9 +59,46 @@
                 <artifactId>spring-cloud-starter-bootstrap</artifactId>
                 <version>${spring.clud.starter.bootstrap.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>${mapstruct.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.18.26</version>
+                <scope>provided</scope>
+            </dependency>
         </dependencies>
 
-
     </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>17</source> <!-- depending on your project -->
+                    <target>17</target> <!-- depending on your project -->
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.26</version>
+                        </path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
+                        <!-- other annotation processors -->
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

@@ -1,7 +1,8 @@
 package org.haozi.dto.upms;
 
 import lombok.Data;
-import org.mapstruct.factory.Mappers;
+
+import java.util.List;
 
 /**
  * @author zyh
@@ -20,5 +21,15 @@ public class UserDetailDTO {
      * 密码
      */
     private String pwd;
+
+    /**
+     * 资源标识
+     */
+    private List<String> resourceFlag;
+
+    /**
+     * 角色标识
+     */
+    private List<String> roleFlag;
 
 }

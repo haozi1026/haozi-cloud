@@ -6,10 +6,11 @@ package org.haozi.exception;
  * @version 1.0
  * @date 2023/2/6 20:29
  */
-public class AppFramworkException extends InternaleException {
+public class AppFramworkException extends InternalException {
 
     private String errorMsg;
     public AppFramworkException(String msg){
+        super(msg);
         this.errorMsg = msg;
     }
 

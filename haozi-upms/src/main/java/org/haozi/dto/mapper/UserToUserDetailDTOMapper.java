@@ -1,8 +1,11 @@
 package org.haozi.dto.mapper;
 
 import org.haozi.dao.po.User;
+import org.haozi.dto.entity.RoleResourcesDTO;
 import org.haozi.dto.upms.UserDetailDTO;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 
 /**
  * @author zyh
@@ -11,5 +14,10 @@ import org.mapstruct.Mapper;
  */
 @Mapper
 public interface UserToUserDetailDTOMapper {
-    UserDetailDTO convert(User user);
+    UserToUserDetailDTOMapper INTANCE = Mappers.getMapper(UserToUserDetailDTOMapper.class);
+
+    @Mapping(target = "userName",source = "user.username")
+    @Mapping(target = "pwd",source = "user.pwd")
+    @Mapping(target = "roleFlag",source = "roleResourcesDTO.roleFlag")
+    UserDetailDTO convert(User user, RoleResourcesDTO roleResourcesDTO);
 }

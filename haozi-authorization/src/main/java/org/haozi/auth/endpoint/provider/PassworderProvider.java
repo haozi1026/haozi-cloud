@@ -4,21 +4,14 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.Getter;
-import org.haozi.auth.authentication.password.HaoZiUserDetailsAuthenticationProvider;
+import org.haozi.auth.authentication.password.UserDetailsAuthenticationPasswordProvider;
 import org.haozi.auth.token.HaoZiToken;
 import org.haozi.auth.token.UsernamePasswordToken;
 import org.haozi.exception.AppFramworkException;
 import org.haozi.exception.AuthException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
-import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
-import org.springframework.util.Assert;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
 
 import java.util.Map;
 import java.util.Set;
@@ -67,7 +60,7 @@ public class PassworderProvider implements AuthProvider {
         if (StrUtil.isBlank(principal) || StrUtil.isBlank(credentials)) {
             throw new AppFramworkException("密码模式校验异常，传入token错误，用户名或密码为空");
         }
-        Map<String, HaoZiUserDetailsAuthenticationProvider> userDetailsAuthenticationProvider = SpringUtil.getBeansOfType(HaoZiUserDetailsAuthenticationProvider.class);
+        Map<String, UserDetailsAuthenticationPasswordProvider> userDetailsAuthenticationProvider = SpringUtil.getBeansOfType(UserDetailsAuthenticationPasswordProvider.class);
 
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                 new UsernamePasswordAuthenticationToken(token.getPrincipal(), token.getCredentials());

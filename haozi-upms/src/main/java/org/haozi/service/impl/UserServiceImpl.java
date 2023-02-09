@@ -2,13 +2,17 @@ package org.haozi.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import jakarta.annotation.Resource;
 import org.haozi.dao.po.User;
 import org.haozi.dao.mapper.UserMapper;
+import org.haozi.dto.entity.RoleResourcesDTO;
+import org.haozi.dto.mapper.UserToUserDetailDTOMapper;
 import org.haozi.dto.upms.UserDetailDTO;
 import org.haozi.exception.ParamEmptyException;
+import org.haozi.service.IResoucesService;
 import org.haozi.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
 /**
@@ -22,6 +26,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
+    @Resource
+    private IResoucesService resoucesService;
+
     @Override
     public UserDetailDTO userDetail(String userName) {
         if (StrUtil.isBlank(userName)) {
@@ -34,6 +41,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (user == null) {
             return null;
         }
-        return null;
+        RoleResourcesDTO resourceByUserDTO = resoucesService.findResourceByUserId(user.getId());
+
+        UserDetailDTO userDetailDTO = UserToUserDetailDTOMapper.INTANCE.convert(user, resourceByUserDTO);
+        return userDetailDTO;
     }
 }

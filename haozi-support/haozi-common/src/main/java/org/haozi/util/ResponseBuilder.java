@@ -16,9 +16,9 @@ public class ResponseBuilder {
         response.setCode(ResponseCode.SUCCESS.getCode());
         return response;
     }
-    public static Response fail(Object data){
+    public static Response fail(String msg){
         Response response = new Response();
-        response.setData(data);
+        response.setErrorMsg(msg);
         response.setCode(ResponseCode.FAILURE.getCode());
         return response;
     }

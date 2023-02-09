@@ -27,13 +27,11 @@ import org.springframework.security.oauth2.server.authorization.token.DefaultOAu
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
 import org.springframework.security.web.authentication.AuthenticationConverter;
-import org.springframework.security.web.util.matcher.AndRequestMatcher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 
-import java.security.Principal;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;

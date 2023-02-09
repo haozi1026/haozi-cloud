@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Import;
 @EnableDiscoveryClient
 @Import(cn.hutool.extra.spring.SpringUtil.class)
 public class AuthorizationApplication {
+
     public static void main(String[] args) {
         SpringApplication.run(AuthorizationApplication.class, args);
     }

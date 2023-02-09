@@ -2,6 +2,7 @@ package org.haozi.service;
 
 import org.haozi.dao.po.Resouces;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.haozi.dto.entity.RoleResourcesDTO;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public interface IResoucesService extends IService<Resouces> {
      * @param userId
      * @return
      */
-     List<Resouces> findResourceByUserId(Long userId);
+    RoleResourcesDTO findResourceByUserId(Long userId);
 
 
 }

@@ -29,7 +29,7 @@ public class Generator  {
                             .pathInfo(Collections.singletonMap(OutputFile.xml, "/Users/yihaozhao/development/workspace/self/haozi-cloud/haozi-cloud/haozi-upms/src/main/resources/mapper")); // 设置mapperXml生成路径
                 })
                 .strategyConfig(builder -> {
-                    builder.addInclude(Arrays.asList("upms_user_role"))
+                    builder.addInclude(Arrays.asList("upms_role"))
                             .addTablePrefix("upms_");
                 })
 

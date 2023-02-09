@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author auto-generator
@@ -32,6 +32,8 @@ public class Role implements Serializable {
     private LocalDateTime createTime;
 
     private LocalDateTime updateTime;
+
+    private String roleFlag;
 
     public Long getRoleId() {
         return roleId;
@@ -73,6 +75,14 @@ public class Role implements Serializable {
         this.updateTime = updateTime;
     }
 
+    public String getRoleFlag() {
+        return roleFlag;
+    }
+
+    public void setRoleFlag(String roleFlag) {
+        this.roleFlag = roleFlag;
+    }
+
     @Override
     public String toString() {
         return "Role{" +
@@ -81,6 +91,7 @@ public class Role implements Serializable {
         ", roleDesc = " + roleDesc +
         ", createTime = " + createTime +
         ", updateTime = " + updateTime +
+        ", roleFlag = " + roleFlag +
         "}";
     }
 }

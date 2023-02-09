@@ -7,7 +7,7 @@ import cn.hutool.core.util.StrUtil;
  * @version 1.0
  * @date 2023/2/9 09:28
  */
-public class ParamEmptyException extends InternaleException {
+public class ParamEmptyException extends InternalException {
     private String msg;
     public ParamEmptyException(String desc, String fieldName) {
         super("参数错误");

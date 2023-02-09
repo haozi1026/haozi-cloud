@@ -14,6 +14,10 @@ public class Response<T> {
      */
     private T Data;
     /**
+     * 错误信息
+     */
+    private String errorMsg;
+    /**
      * 状态码
      */
     private Integer code;
