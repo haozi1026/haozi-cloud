@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Collections;
 
 /**
@@ -27,9 +29,10 @@ public class Generator  {
                             .pathInfo(Collections.singletonMap(OutputFile.xml, "/Users/yihaozhao/development/workspace/self/haozi-cloud/haozi-cloud/haozi-upms/src/main/resources/mapper")); // 设置mapperXml生成路径
                 })
                 .strategyConfig(builder -> {
-                    builder.addInclude("upms_user")
+                    builder.addInclude(Arrays.asList("upms_user_role"))
                             .addTablePrefix("upms_");
                 })
+
                 .execute();
 
 

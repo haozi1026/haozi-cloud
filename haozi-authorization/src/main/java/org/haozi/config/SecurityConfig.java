@@ -129,7 +129,6 @@ public class SecurityConfig {
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                 .redirectUri("http://oauth2.client:8080/login/oauth2/code/demo")
-                .redirectUri("https://www.baidu.com")
                 .scope("read")
                 .scope("write")
                 .scope(OidcScopes.OPENID)

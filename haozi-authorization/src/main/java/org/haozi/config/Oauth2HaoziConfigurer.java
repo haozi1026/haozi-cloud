@@ -38,7 +38,5 @@ public class Oauth2HaoziConfigurer   {
     public AbstractUserDetailsAuthenticationProvider UserDetailsAuthenticationProvider(){
         return new HaoZiUserDetailsAuthenticationProvider();
     }
-    //@Bean
-
 
 }
