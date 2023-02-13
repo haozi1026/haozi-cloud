@@ -1,18 +1,22 @@
 package org.haozi.dao.po;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.ejlchina.searcher.bean.SearchBean;
+
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author auto-generator
  * @since 2023-02-02
  */
 @TableName("upms_user")
+@SearchBean(tables = "upms_user")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -40,7 +44,7 @@ public class User implements Serializable {
 
     private LocalDateTime updateTime;
 
-      private Long id;
+    private Long id;
 
     public String getUsername() {
         return username;

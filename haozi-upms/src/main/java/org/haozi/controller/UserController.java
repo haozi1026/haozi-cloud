@@ -1,6 +1,12 @@
 package org.haozi.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
+import com.ejlchina.searcher.BeanSearcher;
+import com.ejlchina.searcher.SearchResult;
+import com.ejlchina.searcher.util.MapUtils;
+import jakarta.annotation.Resource;
+import org.haozi.dao.po.User;
 import org.haozi.dto.Response;
 import org.haozi.dto.upms.UserDetailDTO;
 import org.haozi.exception.ParamEmptyException;
@@ -23,8 +29,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
+    @Resource
     IUserService userService;
+    @Resource
+    BeanSearcher beanSearcher;
 
     /**
      * 根据用户名查用户详情(用于security)
@@ -39,6 +47,17 @@ public class UserController {
             throw new ParamEmptyException("根据用户名查询用户详情","userName");
         }
         return ResponseBuilder.success(userService.userDetail(userDetailDTO.getUserName()));
+    }
+
+    /**
+     * 分页展示用户数据
+     * @return
+     */
+    @PostMapping("/page")
+    public Response userPaging(@RequestBody User user){
+
+        SearchResult<User> search = beanSearcher.search(User.class, BeanUtil.beanToMap(user));
+        return ResponseBuilder.success(search);
     }
 
 }

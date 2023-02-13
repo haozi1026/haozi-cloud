@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AndRequestMatcher;
@@ -21,15 +22,18 @@ public class UpmsSecurityConfig {
     @Bean
     public SecurityFilterChain securityConfig(HttpSecurity httpSecurity) throws Exception {
 
-        DefaultSecurityFilterChain securityFilterChain = httpSecurity
+        httpSecurity
                 .csrf().disable()
-                .authorizeHttpRequests(auth ->
-                        auth.requestMatchers(new AntPathRequestMatcher("/user/userDetail"))
-                        .anonymous()
-                        .anyRequest()
-                        .authenticated()).build();
+                .authorizeHttpRequests(auth ->{
+                            auth
+                                    .requestMatchers("/user/userDetail")
+                                    .permitAll();
+                            auth
+                                    .anyRequest().authenticated();
+                        })
 
+                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
 
-        return securityFilterChain;
+        return httpSecurity.build();
     }
 }

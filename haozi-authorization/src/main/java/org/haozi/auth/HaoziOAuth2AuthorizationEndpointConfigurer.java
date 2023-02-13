@@ -32,10 +32,9 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 /**
  * @author zyh
@@ -118,9 +117,9 @@ public class HaoziOAuth2AuthorizationEndpointConfigurer {
      * 自定义认证
      */
     public static class HaoZiAuthenticationProvider implements AuthenticationProvider {
-       private  OAuth2AuthorizationService oAuth2AuthorizationService;
+        private OAuth2AuthorizationService oAuth2AuthorizationService;
 
-//       private  OAuth2TokenGenerator oAuth2TokenGenerator;
+        //       private  OAuth2TokenGenerator oAuth2TokenGenerator;
 //        public HaoZiAuthenticationProvider(OAuth2AuthorizationService oAuth2AuthorizationService,OAuth2TokenGenerator tokenGenerator){
 //            this.oAuth2AuthorizationService = oAuth2AuthorizationService;
 //            this.oAuth2TokenGenerator = tokenGenerator;
@@ -146,8 +145,15 @@ public class HaoziOAuth2AuthorizationEndpointConfigurer {
                     .principal(authentication)
                     .authorizationServerContext(AuthorizationServerContextHolder.getContext());
 
+            Set<String> scopes = new HashSet<>();
 
-            OAuth2TokenContext tokenContext = tokenContextBuilder.tokenType(OAuth2TokenType.ACCESS_TOKEN).build();
+            if (CollUtil.isNotEmpty(auth.getAuthorities())) {
+                scopes = auth.getAuthorities().stream().map(authorite -> authorite.getAuthority()).collect(Collectors.toSet());
+            }
+
+            OAuth2TokenContext tokenContext = tokenContextBuilder
+                    .tokenType(OAuth2TokenType.ACCESS_TOKEN)
+                    .authorizedScopes(scopes).build();
             OAuth2Token generatedAccessToken = SpringUtil.getBean(OAuth2TokenGenerator.class).generate(tokenContext);
             if (generatedAccessToken == null) {
                 OAuth2Error error = new OAuth2Error(OAuth2ErrorCodes.SERVER_ERROR,
@@ -159,11 +165,21 @@ public class HaoziOAuth2AuthorizationEndpointConfigurer {
                     generatedAccessToken.getTokenValue(), generatedAccessToken.getIssuedAt(),
                     generatedAccessToken.getExpiresAt(), tokenContext.getAuthorizedScopes());
 
+
+            tokenContext = tokenContextBuilder.tokenType(OAuth2TokenType.REFRESH_TOKEN).build();
+            OAuth2Token generatedRefreshToken = SpringUtil.getBean(OAuth2TokenGenerator.class).generate(tokenContext);
+            if (!(generatedRefreshToken instanceof OAuth2RefreshToken)) {
+                OAuth2Error error = new OAuth2Error(OAuth2ErrorCodes.SERVER_ERROR,
+                        "The token generator failed to generate the refresh token.", "");
+                throw new OAuth2AuthenticationException(error);
+            }
+
+
             Map<String, Object> additionalParameters = Collections.emptyMap();
 
 
             return new OAuth2AccessTokenAuthenticationToken(
-                    registeredClient, authentication, accessToken, null, additionalParameters);
+                    registeredClient, authentication, accessToken, (OAuth2RefreshToken) generatedRefreshToken, additionalParameters);
         }
 
         @Override
