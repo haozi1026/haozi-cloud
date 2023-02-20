@@ -56,7 +56,7 @@
         </dependency>
         <dependency>
             <groupId>org.haozi</groupId>
-            <artifactId>haozi-remote</artifactId>
+            <artifactId>haozi-rpc</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>

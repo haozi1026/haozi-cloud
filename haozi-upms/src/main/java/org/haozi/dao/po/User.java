@@ -1,7 +1,8 @@
 package org.haozi.dao.po;
 
+import cn.zhxu.bs.bean.SearchBean;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.ejlchina.searcher.bean.SearchBean;
+
 
 import java.io.Serializable;
 import java.math.BigInteger;

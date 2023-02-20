@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: haozi-upms
+  datasource:
+    username: haozi
+    password: 19960118
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://haozi.server:3306/haozi_micro?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://127.0.0.1:9000
+logging:
+  level:
+    com.ejlchina.searcher: DEBUG
+
+system:
+  rpc:
+    secret: 321

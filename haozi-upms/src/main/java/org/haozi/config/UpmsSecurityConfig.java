@@ -20,7 +20,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class UpmsSecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityConfig(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain upmsSecurityChain(HttpSecurity httpSecurity) throws Exception {
 
         httpSecurity
                 .csrf().disable()

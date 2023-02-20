@@ -15,8 +15,8 @@ import org.springframework.context.annotation.Import;
 @MapperScan("org.haozi.dao.mapper")
 @Import(cn.hutool.extra.spring.SpringUtil.class)
 @EnableDiscoveryClient
-public class UpmsApplication {
 
+public class UpmsApplication {
     public static void main(String[] args) {
         SpringApplication.run(UpmsApplication.class, args);
     }

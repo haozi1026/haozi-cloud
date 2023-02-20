@@ -12,7 +12,7 @@
         <module>haozi-support</module>
         <module>haozi-authorization</module>
         <module>haozi-upms</module>
-        <module>haozi-support/haozi-remote</module>
+        <module>haozi-support/haozi-rpc</module>
         <module>haozi-support/haozi-exceptionHandler</module>
 
     </modules>

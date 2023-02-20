@@ -34,7 +34,7 @@
             <version>3.5.3.1</version>
         </dependency>
         <dependency>
-            <groupId>com.ejlchina</groupId>
+            <groupId>cn.zhxu</groupId>
             <artifactId>bean-searcher-boot-starter</artifactId>
         </dependency>
 
