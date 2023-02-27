@@ -48,18 +48,24 @@ public class InternalExceptionHandler {
     public Response accessException(AccessException accessException){
         return ResponseBuilder.fail(accessException.getMessage());
     }
+
+    /**
+     * 对未处理异常兜底
+     * @param exception
+     * @return
+     */
     @ExceptionHandler(RuntimeException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response untreatedExcetion(Exception exception){
         String traceId = IdUtil.fastSimpleUUID();
         String errorMsg = StrUtil.format("捕获到未处理异常,traceId{}",traceId);
-        log.error(errorMsg,traceId,exception);
+        log.error(errorMsg,exception);
         SpringUtil.publishEvent(new UntreatedExcetionEvent(exception,traceId));
         return ResponseBuilder.fail(FRIENDLY_TIPS,traceId);
     }
     /**
      * 友好提示
      */
-    private String FRIENDLY_TIPS = "系统内部异常，请稍后重试";
+    private final String FRIENDLY_TIPS = "系统内部异常，请稍后重试";
 }

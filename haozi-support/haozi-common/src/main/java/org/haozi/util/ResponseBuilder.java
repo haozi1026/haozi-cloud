@@ -3,6 +3,8 @@ package org.haozi.util;
 import org.haozi.constants.ResponseCode;
 import org.haozi.dto.Response;
 
+import java.util.Date;
+
 /**
  * @author zyh
  * @version 1.0
@@ -16,7 +18,7 @@ public class ResponseBuilder {
      * @return
      */
     public static Response success(Object data){
-        Response response = new Response();
+        Response response = newResponse();
         response.setData(data);
         response.setCode(ResponseCode.SUCCESS.getCode());
         return response;
@@ -28,7 +30,7 @@ public class ResponseBuilder {
      * @return
      */
     public static Response fail(String msg){
-        Response response = new Response();
+        Response response =  newResponse();
         response.setErrorMsg(msg);
         response.setCode(ResponseCode.FAILURE.getCode());
         return response;
@@ -41,11 +43,15 @@ public class ResponseBuilder {
      * @return
      */
     public static Response fail(String msg,String traceId){
-        Response response = new Response();
+        Response response = newResponse();
         response.setErrorMsg(msg);
         response.setTraceId(traceId);
         response.setCode(ResponseCode.FAILURE.getCode());
         return response;
     }
-
+    private static Response newResponse(){
+        Response response = new Response();
+        response.setTime(new Date());
+        return response;
+    }
 }

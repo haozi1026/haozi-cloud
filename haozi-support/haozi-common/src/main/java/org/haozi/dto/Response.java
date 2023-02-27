@@ -2,6 +2,8 @@ package org.haozi.dto;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * @author zyh
  * @version 1.0
@@ -12,7 +14,7 @@ public class Response<T> {
     /**
      * 数据载体
      */
-    private T Data;
+    private T data;
     /**
      * 错误信息
      */
@@ -25,4 +27,9 @@ public class Response<T> {
      * 追踪id
      */
     private String traceId;
+
+    /**
+     * 时间
+     */
+    private Date time;
 }

@@ -33,8 +33,8 @@ public class UserController {
 
     /**
      * 根据用户名查用户详情(用于security)
-     * @param userDetailDTO
-     * @return
+     * @param userDetailDTO 用户数据查询参数
+     * @return 用户详情数据
      */
     @PostMapping("/userDetail")
     @Internal
@@ -48,17 +48,12 @@ public class UserController {
 
     /**
      * 分页展示用户数据
-     * @return
+     * @return 用户数据
      */
     @PostMapping("/page")
     public Response userPaging(@RequestBody PageQuery<User> user){
         SearchResult<User> search = beanSearcher.search(User.class, user.toParam());
         return ResponseBuilder.success(search);
-    }
-    @PostMapping("/exceptionTest")
-    public Response exceptionTest(){
-        int erro = 1/0;
-        return ResponseBuilder.success("");
     }
 
 }
