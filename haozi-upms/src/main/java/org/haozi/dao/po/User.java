@@ -20,8 +20,6 @@ import java.time.LocalDateTime;
 @SearchBean(tables = "upms_user")
 public class User implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     /**
      * 用户名
      */

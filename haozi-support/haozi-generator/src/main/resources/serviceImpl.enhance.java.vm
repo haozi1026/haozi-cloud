@@ -1,0 +1,62 @@
+package ${package.ServiceImpl};
+
+import ${package.Entity}.${entity};
+import ${package.Mapper}.${table.mapperName};
+    #if(${table.serviceInterface})
+    import ${package.Service}.${table.serviceName};
+    #end
+import ${superServiceImplClassPackage};
+import org.springframework.stereotype.Service;
+import java.util.Optional;
+import cn.hutool.core.util.StrUtil;
+import org.haozi.exception.ParamEmptyException;
+import java.util.Optional;
+import lombok.NonNull;
+/**
+ * <p>
+ * $!{table.comment} 服务实现类
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+@Service
+#if(${kotlin})
+open class ${table.serviceImplName} : ${superServiceImplClass}<${table.mapperName}, ${entity}>()#if(${table.serviceInterface}), ${table.serviceName}#end {
+
+        }
+#else
+public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}>#if(${table.serviceInterface}) implements ${table.serviceName}#end {
+
+    @Override
+    public void add(${entity} addDTO) {
+        // TODO: 2023/3/2 务必按照实际业务对入参做校验与处理
+        this.baseMapper.insert(addDTO);
+    }
+
+    @Override
+    public void delete(@NonNull ${entity} deleteDTO) {
+
+        Optional.ofNullable(deleteDTO).orElseThrow(() -> {
+            String errorMsg = StrUtil.format("删除时传参错误,类名:",this.getClass());
+            return new ParamEmptyException(errorMsg,"deleteDTO");
+        });
+        #set($haveKeyFlag = false)
+         #foreach($field in ${table.fields})
+             #if(${field.keyFlag})
+             #set($getprefix="get")
+              #set($haveKeyFlag = true)
+         Optional.ofNullable(deleteDTO.${getprefix}${field.capitalName}()).orElseThrow(() -> {
+             String errorMsg = StrUtil.format("删除时传参错误,类名:",this.getClass());
+             return new ParamEmptyException(errorMsg,"${field.capitalName})");
+         });
+
+             #end
+         #end
+    #if($haveKeyFlag)
+        // TODO: 2023/3/2 务必按照实际业务对入参做校验与处理
+        this.baseMapper.deleteById(deleteDTO);
+    #end
+    }
+}
+#end

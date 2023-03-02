@@ -51,7 +51,7 @@ public class UserController {
      * @return 用户数据
      */
     @PostMapping("/page")
-    public Response userPaging(@RequestBody PageQuery<User> user){
+    public Response pagingQuery(@RequestBody PageQuery<User> user){
         SearchResult<User> search = beanSearcher.search(User.class, user.toParam());
         return ResponseBuilder.success(search);
     }

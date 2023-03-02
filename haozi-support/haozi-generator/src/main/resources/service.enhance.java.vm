@@ -1,0 +1,31 @@
+package ${package.Service};
+
+import ${package.Entity}.${entity};
+import ${superServiceClassPackage};
+import lombok.NonNull;
+/**
+ * <p>
+ * $!{table.comment} 服务类
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+#if(${kotlin})
+interface ${table.serviceName} : ${superServiceClass}<${entity}>
+#else
+public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
+
+        /**
+         * 新增数据
+         * @param user 新增数据信息
+        */
+        void add(${entity} addDTO);
+
+        /**
+         * 删
+         * @param deleteDTO 删除参数，要描述删除主体信息（默认为主键）
+         */
+        void delete(@NonNull ${entity} deleteDTO);
+    }
+#end
