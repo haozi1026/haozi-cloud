@@ -18,7 +18,7 @@ public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
 
         /**
          * 新增数据
-         * @param user 新增数据信息
+         * @param addDTO 新增数据信息
         */
         void add(${entity} addDTO);
 

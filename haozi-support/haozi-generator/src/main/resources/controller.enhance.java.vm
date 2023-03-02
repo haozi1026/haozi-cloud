@@ -41,13 +41,13 @@ public class ${table.controllerName} extends ${superControllerClass} {
 public class ${table.controllerName} {
     #end
     @Resource
-    BeanSearcher beanSearcher;
+   private BeanSearcher beanSearcher;
     /**
      * 分页展示数据
      * @return 用户数据
      */
     @PostMapping("/page")
-    public Response pagingQuery(@RequestBody PageQuery<${entity}> queryParam){
+    public Response pagingQuery(@RequestBody PageQuery<${entity}> queryParam) {
         SearchResult<${entity}> search = beanSearcher.search(${entity}.class, queryParam.toParam());
         return ResponseBuilder.success(search);
     }

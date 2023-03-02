@@ -35,7 +35,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
     }
 
     @Override
-    public void delete(@NonNull ${entity} deleteDTO) {
+    public void delete(${entity} deleteDTO) {
 
         Optional.ofNullable(deleteDTO).orElseThrow(() -> {
             String errorMsg = StrUtil.format("删除时传参错误,类名:",this.getClass());
