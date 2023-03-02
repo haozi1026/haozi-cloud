@@ -41,7 +41,7 @@ public class ${table.controllerName} extends ${superControllerClass} {
 public class ${table.controllerName} {
     #end
     @Resource
-   private BeanSearcher beanSearcher;
+    private BeanSearcher beanSearcher;
     /**
      * 分页展示数据
      * @return 用户数据

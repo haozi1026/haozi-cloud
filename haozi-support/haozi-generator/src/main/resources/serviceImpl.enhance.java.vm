@@ -30,7 +30,7 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
 
     @Override
     public void add(${entity} addDTO) {
-        // TODO: 2023/3/2 务必按照实际业务对入参做校验与处理
+        // TODO: ${date} 务必按照实际业务对入参做校验与处理
         this.baseMapper.insert(addDTO);
     }
 
@@ -53,9 +53,34 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
 
              #end
          #end
-    #if($haveKeyFlag)
-        // TODO: 2023/3/2 务必按照实际业务对入参做校验与处理
+        #if($haveKeyFlag)
+        // TODO: ${date} 务必按照实际业务对入参做校验与处理
         this.baseMapper.deleteById(deleteDTO);
+        #end
+    }
+
+    @Override
+    public void update(${entity}  updateDTO) {
+        Optional.ofNullable(updateDTO).orElseThrow(() -> {
+            String errorMsg = StrUtil.format("修改时传参错误,类名:",this.getClass());
+            return new ParamEmptyException(errorMsg,"updateDTO");
+        });
+
+        #set($haveKeyFlag = false)
+        #foreach($field in ${table.fields})
+            #if(${field.keyFlag})
+                #set($getprefix="get")
+                #set($haveKeyFlag = true)
+        Optional.ofNullable(updateDTO.${getprefix}${field.capitalName}()).orElseThrow(() -> {
+            String errorMsg = StrUtil.format("修改时传参错误,类名:",this.getClass());
+            return new ParamEmptyException(errorMsg,"${field.capitalName})");
+        });
+
+            #end
+        #end
+    #if($haveKeyFlag)
+        // TODO: ${date} 务必按照实际业务对入参做校验与处理
+        this.baseMapper.updateById(updateDTO);
     #end
     }
 }

@@ -56,6 +56,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
+    public void update(User updateDTO) {
+        Optional.ofNullable(updateDTO).orElseThrow(() -> {
+            String errorMsg = StrUtil.format("修改时传参错误,类名:",this.getClass());
+            return new ParamEmptyException(errorMsg,"deleteDTO");
+        });
+
+        Optional.ofNullable(updateDTO.getId()).orElseThrow(() -> {
+            String errorMsg = StrUtil.format("修改时传参错误,类名:",this.getClass());
+            return new ParamEmptyException(errorMsg,"id");
+        });
+        this.baseMapper.updateById(updateDTO);
+    }
+
+    @Override
     public UserDetailDTO userDetail(String userName) {
         if (StrUtil.isBlank(userName)) {
             throw new ParamEmptyException("根据用户名查询用户详情", "userName");

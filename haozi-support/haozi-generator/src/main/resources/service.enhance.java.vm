@@ -26,6 +26,11 @@ public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
          * 删
          * @param deleteDTO 删除参数，要描述删除主体信息（默认为主键）
          */
-        void delete(@NonNull ${entity} deleteDTO);
-    }
+        void delete(${entity} deleteDTO);
+        /**
+          * 改
+          * @param updateDTO 修改参数，要描述修改主体信息（默认为主键）与修改字段
+          */
+        void update(${entity} updateDTO);
+}
 #end

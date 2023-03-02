@@ -25,7 +25,13 @@ public interface IUserService extends IService<User> {
      * 删
      * @param deleteDTO 删除参数，要描述删除主体信息（默认为主键）
      */
-    void delete(@NonNull User deleteDTO);
+    void delete(User deleteDTO);
+
+    /**
+     * 改
+     * @param updateDTO 修改参数，要描述修改主体信息（默认为主键）与修改字段
+     */
+    void update(User updateDTO);
 
     /**
      * 用户详情（用于 security认证）
