@@ -1,22 +1,22 @@
 package ${package.Entity};
 
-#foreach($pkg in ${table.importPackages})
-import ${pkg};
-#end
-
-#if(${springdoc})
-import io.swagger.v3.oas.annotations.media.Schema;
-#elseif(${swagger})
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-#end
-#if(${entityLombokModel})
-import lombok.Getter;
-import lombok.Setter;
-    #if(${chainModel})
-    import lombok.experimental.Accessors;
+    #foreach($pkg in ${table.importPackages})
+    import ${pkg};
     #end
-#end
+
+    #if(${springdoc})
+    import io.swagger.v3.oas.annotations.media.Schema;
+    #elseif(${swagger})
+    import io.swagger.annotations.ApiModel;
+    import io.swagger.annotations.ApiModelProperty;
+    #end
+    #if(${entityLombokModel})
+    import lombok.Getter;
+    import lombok.Setter;
+        #if(${chainModel})
+        import lombok.experimental.Accessors;
+        #end
+    #end
 import cn.zhxu.bs.bean.SearchBean;
 /**
  * <p>
@@ -47,13 +47,13 @@ public class ${entity} extends ${superEntityClass}#if(${activeRecord})<${entity}
 #elseif(${activeRecord})
 public class ${entity} extends Model<${entity}> {
 #elseif(${entitySerialVersionUID})
-public class ${entity} implements Serializable {
+public class ${entity} implements Serializable{
 #else
 public class ${entity} {
 #end
 #if(${entitySerialVersionUID})
 
-private static final long serialVersionUID = 1L;
+private static final long serialVersionUID=1L;
 #end
 ## ----------  BEGIN 字段循环遍历  ----------
 #foreach($field in ${table.fields})
@@ -111,12 +111,12 @@ private ${field.propertyType} ${field.propertyName};
             #set($getprefix="get")
         #end
 
-    public ${field.propertyType} ${getprefix}${field.capitalName}() {
+    public ${field.propertyType} ${getprefix}${field.capitalName}(){
             return ${field.propertyName};
             }
 
         #if(${chainModel})
-        public ${entity} set${field.capitalName}(${field.propertyType} ${field.propertyName}) {
+        public ${entity} set${field.capitalName}(${field.propertyType} ${field.propertyName}){
         #else
         public void set${field.capitalName}(${field.propertyType} ${field.propertyName}) {
         #end
@@ -132,13 +132,13 @@ private ${field.propertyType} ${field.propertyName};
 #if(${entityColumnConstant})
     #foreach($field in ${table.fields})
 
-    public static final String ${field.name.toUpperCase()} = "${field.name}";
+    public static final String ${field.name.toUpperCase()} ="${field.name}";
     #end
 #end
 #if(${activeRecord})
 
 @Override
-public Serializable pkVal() {
+public Serializable pkVal(){
     #if(${keyPropertyName})
             return this.${keyPropertyName};
     #else
